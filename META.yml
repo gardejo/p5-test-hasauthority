@@ -1,0 +1,18 @@
+--- #YAML:1.0
+name:                Test-HasVersion
+version:             0.012
+abstract:            Check Perl modules have version numbers
+license:             perl
+generated_by:        ExtUtils::MakeMaker version 6.30_01
+author:              Adriano R. Ferreira <ferreira@cpan.org>
+distribution_type:   module
+requires:     
+    ExtUtils::MakeMaker:           0
+    File::Find:                    0
+    File::Spec:                    0
+    Test::Builder:                 0
+    Test::Builder::Tester:         1.04
+    Test::More:                    0
+meta-spec:
+    url: <http://module-build.sourceforge.net/META-spec-new.html>;
+    version: 1.1

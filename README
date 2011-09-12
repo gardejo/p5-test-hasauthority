@@ -1,0 +1,6 @@
+This is alpha release 0.012 of Test::HasVersion.
+
+Test::HasVersion is a test module intented to check all
+Perl modules in a distribution have version numbers.
+
+Adriano Ferreira <ferreira@cpan.org> Jul 14 2006
