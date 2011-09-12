@@ -2,16 +2,16 @@
 
 use Test::More tests => 7;
 
-require_ok('Test::HasVersion');
+require_ok('Test::HasAuthority');
 
 # alias to have a short name
-*all_pm_files = \&Test::HasVersion::all_pm_files;
+*all_pm_files = \&Test::HasAuthority::all_pm_files;
 
 # and here we test &all_pm_files
 
 {
   my @pm_files = all_pm_files();
-  is_deeply(\@pm_files, [ qw(HasVersion.pm) ]);
+  is_deeply(\@pm_files, [ qw(HasAuthority.pm) ]);
 }
 
 {

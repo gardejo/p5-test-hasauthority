@@ -1,6 +1,6 @@
 
 use Test::More tests => 1;
 
-BEGIN { use_ok('Test::HasVersion'); }
+BEGIN { use_ok('Test::HasAuthority'); }
 
-diag( "Testing Test::HasVersion $Test::HasVersion::VERSION, Perl $], $^X" );
+diag( "Testing Test::HasAuthority $Test::HasAuthority::VERSION, Perl $], $^X" );

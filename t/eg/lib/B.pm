@@ -1,2 +1,2 @@
 
-our $VERSION = '0.1';
+our $AUTHORITY = 'cpan:JOHNDOE';

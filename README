@@ -1,6 +1,6 @@
-This is alpha release 0.012 of Test::HasVersion.
+This is alpha release 0.00 of Test::HasAuthority.
 
-Test::HasVersion is a test module intented to check all
-Perl modules in a distribution have version numbers.
+Test::HasAuthority is a test module intented to check all
+Perl modules in a distribution have authority strings.
 
-Adriano Ferreira <ferreira@cpan.org> Jul 14 2006
+MORIYA Masaki, alias Gardejo <moriya at cpan dot org> Xxx XX 2011

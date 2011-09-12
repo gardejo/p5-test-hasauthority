@@ -1,62 +1,63 @@
 
-package Test::HasVersion;
+package Test::HasAuthority;
 
 use strict;
 use warnings;
 
-our $VERSION = '0.012';
+our $VERSION = '0.00';
+our $AUTHORITY = 'cpan:MORIYA';
 
 =head1 NAME
 
-Test::HasVersion - Check Perl modules have version numbers
+Test::HasAuthority - Check Perl modules have authority strings
 
 =head1 SYNOPSIS
 
-C<Test::HasVersion> lets you check a Perl module has a version 
-number in a C<Test::Simple> fashion.
+C<Test::HasAuthority> lets you check a Perl module has an authority 
+string in a C<Test::Simple> fashion.
 
-  use Test::HasVersion tests => 1;
-  pm_version_ok("M.pm", "Valid version");
+  use Test::HasAuthority tests => 1;
+  pm_authority_ok("M.pm", "Valid authority");
 
-Module authors can include the following in a F<t/has_version.t> 
-file and let C<Test::HasVersion> find and check all 
+Module authors can include the following in a F<t/has_authority.t> 
+file and let C<Test::HasAuthority> find and check all 
 installable PM files in a distribution.
 
   use Test::More;
-  eval "use Test::HasVersion";
+  eval "use Test::HasAuthority";
   plan skip_all => 
-       'Test::HasVersion required for testing for version numbers' if $@;
-  all_pm_version_ok();
+       'Test::HasAuthority required for testing for authority strings' if $@;
+  all_pm_authority_ok();
 
 =head1 DESCRIPTION
 
 Do you wanna check that every one of your Perl modules in
-a distribution has a version number? You wanna make sure
+a distribution has an authority string? You wanna make sure
 you don't forget the brand new modules you just added?
 Well, that's the module you have been looking for.
 Use it!
 
 Do you wanna check someone else's distribution
 to make sure the author have not commited the sin of
-leaving Perl modules without a version that can be used
-to tell if you have this or that feature? C<Test::HasVersion>
+leaving Perl modules without an authority that can be used
+to tell if you have this or that feature? C<Test::HasAuthority>
 is also for you, nasty little fellow.
 
-There's a script F<test_version> which is installed with
+There's a script F<test_authority> which is installed with
 this distribution. You may invoke it from within the
 root directory of a distribution you just unpacked,
 and it will check every F<.pm> file in the directory 
 and under F<lib/> (if any).
 
-  $ test_version
+  $ test_authority
 
 You may also provide directories and files as arguments.
 
-  $ test_version *.pm lib/ inc/
-  $ test_version . 
+  $ test_authority *.pm lib/ inc/
+  $ test_authority . 
 
 (Be warned that many Perl modules in a F<t/> directory
-do not receive versions because they are not used 
+do not receive authorities because they are not used 
 outside the distribution.)
 
 Ok. That's not a very useful module by now.
@@ -71,11 +72,11 @@ But it will be. Wait for the upcoming releases.
 # most of the following code was borrowed from Test::Pod
 
 use Test::Builder;
-use ExtUtils::MakeMaker; # to lay down my hands on MM->parse_version
+use ExtUtils::MakeMaker; # to lay down my hands on MM->parse_authority
 
 my $Test = Test::Builder->new;
 
-our @EXPORTS = qw( pm_version_ok all_pm_version_ok all_pm_files );
+our @EXPORTS = qw( pm_authority_ok all_pm_authority_ok all_pm_files );
 
 sub import {
     my $self = shift;
@@ -94,42 +95,42 @@ sub import {
 
 #=begin private
 
-=item PRIVATE B<_pm_version>
+=item PRIVATE B<_pm_authority>
 
-  $v = _pm_version($pm);
+  $a = _pm_authority($pm);
 
-Parses a PM file and return what it thinks is $VERSION
+Parses a PM file and return what it thinks is $AUTHORITY
 in this file. (Actually implemented with 
-C<< use ExtUtils::MakeMaker; MM->parse_version($file) >>.)
+C<< use ExtUtils::MakeMaker; MM->parse_authority($file) >>.)
 C<$pm> is the filename (eg., F<lib/Data/Dumper.pm>).
 
 =cut
 
 #=end private
 
-sub _pm_version {
+sub _pm_authority {
     my $pm = shift;
-    my $v;
-    eval { $v = MM->parse_version($pm); };
-    return $@ ? undef : $v;
+    my $a;
+    eval { $a = MM->parse_authority($pm); };
+    return $@ ? undef : $a;
 }
 
-=item B<pm_version_ok>
+=item B<pm_authority_ok>
 
-  pm_version_ok('Module.pm');
-  pm_version_ok('M.pm', 'Has valid version');
+  pm_authority_ok('Module.pm');
+  pm_authority_ok('M.pm', 'Has valid authority');
 
 Checks to see if the given file has a valid 
-version. Actually a valid version number is
+authority. Actually a valid authority string is
 defined and not equal to C<'undef'> (the string)
-which is return by C<_pm_version> if a version
+which is return by C<_pm_authority> if an authority
 cannot be determined.
 
 =cut
 
-sub pm_version_ok {
+sub pm_authority_ok {
   my $file = shift;
-  my $name = @_ ? shift : "$file has version";
+  my $name = @_ ? shift : "$file has authority";
 
   if (!-f $file) {
     $Test->ok(0, $name);
@@ -137,39 +138,39 @@ sub pm_version_ok {
     return;
   }
 
-  my $v = _pm_version($file);
-  my $ok = _is_valid_version($v);
+  my $a = _pm_authority($file);
+  my $ok = _is_valid_authority($a);
   $Test->ok($ok, $name);
-  #$Test->diag("$file $v ") if $ok && $noisy;
+  #$Test->diag("$file $a ") if $ok && $noisy;
 }
 
-sub _is_valid_version {
+sub _is_valid_authority {
   defined $_[0] && $_[0] ne 'undef';
 }
 
-=item B<all_pm_version_ok>
+=item B<all_pm_authority_ok>
 
-  all_pm_version_ok();
-  all_pm_version_ok(@PM_FILES);
+  all_pm_authority_ok();
+  all_pm_authority_ok(@PM_FILES);
 
 Checks every given file and F<.pm> files found
 under given directories to see if they provide
-valid version numbers. If no argument is given,
+valid authority strings. If no argument is given,
 it defaults to check every file F<*.pm> in
 the current directory and recurses under the
 F<lib/> directory (if it exists).
 
-If no test plan was setted, C<Test::HasVersion> will set one
+If no test plan was setted, C<Test::HasAuthority> will set one
 after computing the number of files to be tested. Otherwise,
 the plan is left untouched.
 
 =cut
 
-sub all_pm_version_ok {
+sub all_pm_authority_ok {
   my @pm_files = all_pm_files(@_);
   $Test->plan(tests => scalar @pm_files) unless $Test->has_plan;
   for (@pm_files) {
-    pm_version_ok($_);
+    pm_authority_ok($_);
   }
 }
 
@@ -212,7 +213,7 @@ sub _list_pm_files {
   @files = all_pm_files(@files_and_dirs);
 
 Implements finding the Perl modules according to the
-semantics of the previous function C<all_pm_version_ok>.
+semantics of the previous function C<all_pm_authority_ok>.
 
 =cut
 
@@ -244,43 +245,65 @@ sub all_pm_files {
 Other usage patterns besides the ones given in the synopsis.
 
   use Test::More tests => $num_tests;
-  use Test::HasVersion;
-  pm_version_ok($file1);
-  pm_version_ok($file2);
+  use Test::HasAuthority;
+  pm_authority_ok($file1);
+  pm_authority_ok($file2);
 
 Obviously, you can't plan twice.
 
   use Test::More;
-  use Test::HasVersion;
+  use Test::HasAuthority;
   plan tests => $num_tests;
-  pm_version_ok($file);
+  pm_authority_ok($file);
 
 C<plan> comes from C<Test::More>.
 
   use Test::More;
-  use Test::HasVersion;
+  use Test::HasAuthority;
   plan 'no_plan';
-  pm_version_ok($file);
+  pm_authority_ok($file);
 
 C<no_plan> is ok either.
 
 =head1 SEE ALSO
 
   Test::Version
+  Test::HasVersion
 
 Please reports bugs via CPAN RT, 
-http://rt.cpan.org/NoAuth/Bugs.html?Dist=Test-HasVersion
+http://rt.cpan.org/NoAuth/Bugs.html?Dist=Test-HasAuthority
+
+=head1 ACKNOWLEDGEMENTS
+
+=over 4
+
+=item *
+
+B<A. R. Ferreira> wrote L<Test::HasVersion>, which this module refer to.
+
+=back
 
 =head1 AUTHOR
 
-A. R. Ferreira, E<lt>ferreira@cpan.orgE<gt>
+=over 4
+
+=item MORIYA Masaki, alias Gardejo
+
+C<< <moriya at cpan dot org> >>,
+L<http://gardejo.org/>
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2006 by A. R. Ferreira
+Copyright (c) 2011 MORIYA Masaki, alias Gardejo
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+This library is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
+See L<perlgpl> and L<perlartistic>.
+
+The full text of the license can be found in the F<LICENSE> file included with
+this distribution.
 
 =cut
 
